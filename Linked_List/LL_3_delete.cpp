@@ -12,7 +12,8 @@ public:
         this->next = next;
     }
 };
-void traverse(Node* head){
+void traverse(Node *head)
+{
     Node *temp = head;
     while (temp)
     {
@@ -22,14 +23,84 @@ void traverse(Node* head){
     cout << endl;
 }
 
-Node* deleteAtBeginning(Node* head){
-    if(head==NULL){
+Node *deleteAtBeginning(Node *head)
+{
+    if (head == NULL)
+    {
+        return NULL;
+    }
+    Node *temp = head;
+    head = head->next;
+    // free(temp);
+    delete temp;
+    return head;
+}
+
+//delete element at the tail
+Node *deleteAtEnd(Node* head){
+    if(head==NULL || head->next==NULL){
         return NULL;
     }
     Node* temp = head;
-    head= head->next;
-    // free(temp);
-    delete temp;
+    while(temp->next->next){
+        temp=temp->next;
+    }
+    free(temp->next);
+    temp->next = NULL;
+    return head;
+}
+
+// delete kth element
+Node *deleteKthelement(Node* head,int k){
+    if(head==NULL){
+        return head;
+    }
+    if(k==1){
+        Node* temp = head;
+        head = head->next;
+        free(temp);
+        return head;
+    }
+
+    Node* temp=head,*prev = NULL;
+    int cnt=0;
+    while(temp){
+        cnt++;
+        if(cnt==k){
+            prev->next = prev->next->next;
+            free(temp);
+            return head;
+        }
+        prev = temp;
+        temp = temp->next;
+    }
+
+    return head;
+}
+
+// delete the value
+Node *deletetheValue(Node* head,int k){
+    if(head==NULL){
+        return head;
+    }
+    if(head->data==k){
+        Node* temp = head;
+        head = head->next;
+        free(temp);
+        return head;
+    }
+
+    Node* temp=head,*prev = NULL;
+    while(temp){
+        if(temp->data==k){
+            prev->next = prev->next->next;
+            free(temp);
+            return head;
+        }
+        prev = temp;
+        temp = temp->next;
+    }
+
     return head;
 }
 
@@ -47,13 +118,32 @@ Node *convertArrtoLL(vector<int> &arr)
     return head;
 }
 
+
 int main()
 {
-    vector<int> arr = {3, 4, 5, 6, 7};
+    vector<int> arr = {3, 4, 5, 6, 92, 56, 88, 7, 70};
     Node *head = convertArrtoLL(arr);
     traverse(head);
     head = deleteAtBeginning(head);
-    cout<< "Deletion at beginning" << endl;
+    cout << "Deletion at beginning" << endl;
+    traverse(head);
+    cout << "Deletion at End" << endl;
+    head = deleteAtEnd(head);
+    traverse(head);
+    cout << "Deletion of 3rd element"<< endl;
+    head = deleteKthelement(head,3);
+    traverse(head);
+    cout << "Deletion of 10th element"<< endl;
+    head = deleteKthelement(head,10);
+    traverse(head);
+    cout << "Deletion of 1st element"<< endl;
+    head = deleteKthelement(head,1);
+    traverse(head);
+    cout << "Deletion of 88"<< endl;
+    head = deletetheValue(head,88);
+    traverse(head);
+    cout << "Deletion of 5"<< endl;
+    head = deletetheValue(head,5);
     traverse(head);
     return 0;
 }
